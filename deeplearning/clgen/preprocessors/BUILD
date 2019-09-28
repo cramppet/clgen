@@ -307,6 +307,28 @@ py_test(
     ],
 )
 
+py_library(
+    name = "c99",
+    srcs = ["c99.py"],
+    data = select({
+        "//:darwin": [
+            "@libcxx_mac//:headers",
+        ],
+        "//conditions:default": [
+            "@libcxx_linux//:headers",
+        ],
+    }),
+    visibility = ["//deeplearning/clgen:__subpackages__"],
+    deps = [
+        ":clang",
+        ":normalizer",
+        ":public",
+        "//compilers/llvm:clang",
+        "//labm8:app",
+        "//labm8:bazelutil",
+    ],
+)
+
 # FIXME(cec): py3_image is not a test rule, but //labm8:test is marked
 # test-only.
 # py3_image(
@@ -530,6 +552,7 @@ py_library(
         # each preprocessor is listed in its deps.
         ":common",
         ":cxx",
+        ":c99",
         ":java",
         ":normalizer",
         ":opencl",
